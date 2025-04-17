@@ -2,9 +2,9 @@ import {
   Button,
 } from "@/shared/components"
 import { X } from "lucide-react"
-import { Outlet } from 'react-router'
+import { Link, Outlet } from 'react-router'
 import { CustomerList } from "../components/customer-list/CustomerList"
-import { ContactInfo } from "../components/contact-info/ContactInfo"
+import { ContactDetails } from "../components/contact-details/ContactDetails"
 
 const ChatLayout = () => {
   return (
@@ -12,10 +12,10 @@ const ChatLayout = () => {
       {/* Sidebar */}
       <div className="w-64 border-r bg-muted/10">
         <div className="p-4 border-b">
-          <div className="flex items-center gap-2">
+          <Link to="/chat" className="flex items-center gap-2">
             <div className="h-6 w-6 rounded-full bg-primary" />
             <span className="font-semibold">NexTalk</span>
-          </div>
+          </Link>
         </div>
         <CustomerList />
       </div>
@@ -43,7 +43,7 @@ const ChatLayout = () => {
           <div className="h-14 border-b px-4 flex items-center">
             <h2 className="font-medium">Contact details</h2>
           </div>
-          <ContactInfo />
+          <ContactDetails />
         </div>
       </div>
     </div>

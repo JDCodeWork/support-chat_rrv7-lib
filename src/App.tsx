@@ -1,8 +1,11 @@
 import { AppRouter } from "./shared/AppRouter"
+import { TanStackQuery } from "./shared/plugins/TanStackQuery"
 
 function App() {
   return (
-    <AppRouter />
+    <TanStackQuery>
+      <AppRouter />
+    </TanStackQuery>
   )
 }
 
