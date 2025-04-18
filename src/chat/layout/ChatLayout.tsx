@@ -1,12 +1,37 @@
 import {
   Button,
 } from "@/shared/components"
-import { X } from "lucide-react"
-import { Link, Outlet } from 'react-router'
+import { LogOut, X } from "lucide-react"
+import { Link, Outlet, useNavigate } from 'react-router'
 import { CustomerList } from "../components/customer-list/CustomerList"
 import { ContactDetails } from "../components/contact-details/ContactDetails"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { checkAuth } from "@/shared/data/fake"
 
 const ChatLayout = () => {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+
+  const onLogout = () => {
+    localStorage.removeItem('token')
+
+    queryClient.invalidateQueries({ queryKey: ['user'] })
+
+    navigate('/auth/login', { replace: true })
+  }
+
+  const { data: userData } = useQuery({
+    queryKey: ['user'],
+    queryFn: () => {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        navigate('/auth/login', { replace: true })
+      }
+
+      return checkAuth(token!)
+    }
+  })
+
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
@@ -14,10 +39,16 @@ const ChatLayout = () => {
         <div className="p-4 border-b">
           <Link to="/chat" className="flex items-center gap-2">
             <div className="h-6 w-6 rounded-full bg-primary" />
-            <span className="font-semibold">NexTalk</span>
+            <span className="font-semibold">{userData?.name}</span>
           </Link>
         </div>
         <CustomerList />
+        <div className="p-4 border-t w-full">
+          <Button variant="ghost" className="w-full border border-transparent hover:border-red-400 hover:text-red-600 transition-colors cursor-pointer" onClick={onLogout}>
+            <LogOut />
+            <span className="ml-2">Logout</span>
+          </Button>
+        </div>
       </div>
 
       {/* Main Content */}
